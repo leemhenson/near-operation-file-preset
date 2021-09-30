@@ -1,0 +1,63 @@
+{
+  "name": "@trayio/near-operation-file-preset",
+  "version": "1.0.0",
+  "description": "GraphQL Code Generator preset for generating operation code near the operation file",
+  "license": "ISC",
+  "scripts": {
+    "lint": "eslint **/*.ts",
+    "prepack": "bob prepack",
+    "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\"",
+    "test": "jest --no-watchman --config ./jest.config.js"
+  },
+  "devDependencies": {
+    "@types/jest": "27.0.2",
+    "@types/node": "14.17.19",
+    "@types/parse-filepath": "1.0.0",
+    "@typescript-eslint/eslint-plugin": "4.31.2",
+    "@typescript-eslint/parser": "4.31.2",
+    "eslint": "7.32.0",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-config-standard": "16.0.3",
+    "eslint-plugin-import": "2.24.2",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-promise": "5.1.0",
+    "jest": "27.2.2",
+    "prettier": "2.3.2",
+    "ts-jest": "27.0.5",
+    "typescript": "4.4.3"
+  },
+  "dependencies": {
+    "@graphql-codegen/add": "^3.1.0",
+    "@graphql-codegen/cli": "2.2.0",
+    "@graphql-codegen/plugin-helpers": "^2.1.1",
+    "@graphql-codegen/visitor-plugin-common": "2.2.1",
+    "parse-filepath": "^1.0.2",
+    "tslib": "~2.3.0"
+  },
+  "peerDependencies": {
+    "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    },
+    "./*": {
+      "require": "./dist/*.js",
+      "import": "./dist/*.mjs"
+    }
+  },
+  "typings": "dist/index.d.ts",
+  "typescript": {
+    "definition": "dist/index.d.ts"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts"
+  },
+  "publishConfig": {
+    "directory": "dist",
+    "access": "public"
+  }
+}
