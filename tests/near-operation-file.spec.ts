@@ -478,7 +478,7 @@ describe('near-operation-file preset', () => {
         },
       });
 
-      const queriesContent = result.find(generatedDoc => generatedDoc.filename.match(/issue-6546-queries/)).content;
+      const queriesContent = result.find(generatedDoc => generatedDoc.filename.match(/issue-6546-queries/))!.content;
       const imports = queriesContent.match(/import.*UsernameFragmentFragmentDoc/g);
       expect(imports).toHaveLength(1);
     });
@@ -1216,5 +1216,5 @@ describe('near-operation-file preset', () => {
 
 const getFragmentImportsFromResult = (result: Types.GenerateOptions[], index = 0) =>
   result[index].config.fragmentImports
-    .map(importStatement => generateFragmentImportStatement(importStatement, 'both'))
+    .map((importStatement: any) => generateFragmentImportStatement(importStatement, 'both'))
     .join('\n');

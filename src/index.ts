@@ -126,6 +126,24 @@ export type NearOperationFileConfig = {
    * ```
    */
   importTypesNamespace?: string;
+
+  /**
+   * @description Optional, only process operations whose name matches this regular expression.
+   * @default '.*'
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   * src/:
+   *  preset: near-operation-file
+   *  presetConfig:
+   *    baseTypesPath: types.ts
+   *    operationNameFilter: Public$
+   *  plugins:
+   *    - typescript-operations
+   * ```
+   */
+  operationNameFilter?: string;
 };
 
 export type FragmentNameToFile = {
@@ -145,6 +163,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       options.presetConfig.importAllFragmentsFrom || null;
 
     const baseTypesPath = options.presetConfig.baseTypesPath;
+    const operationNameFilter = new RegExp(options.presetConfig.operationNameFilter || '.*');
 
     if (!baseTypesPath) {
       throw new Error(
@@ -175,6 +194,7 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
         },
         typesImport: options.config.useTypeImports ?? false,
       },
+      operationNameFilter,
       getConfigValue(options.config.dedupeFragments, false)
     );
 
@@ -215,6 +235,10 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
     const artifacts: Array<Types.GenerateOptions> = [];
 
     for (const [filename, record] of filePathsMap.entries()) {
+      if (record.documents[0]?.document?.definitions.length === 0) {
+        continue;
+      }
+
       let fragmentImportsArr = record.fragmentImports;
 
       if (importAllFragmentsFrom) {
@@ -255,8 +279,8 @@ export const preset: Types.OutputPreset<NearOperationFileConfig> = {
       };
 
       for (const source of record.documents) {
-        combinedSource.rawSDL += source.rawSDL;
-        (combinedSource.document.definitions as any).push(...source.document.definitions);
+        combinedSource.rawSDL! += source.rawSDL!;
+        (combinedSource.document!.definitions as any).push(...source.document!.definitions);
       }
 
       artifacts.push({

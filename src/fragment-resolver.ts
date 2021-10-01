@@ -78,7 +78,7 @@ function buildFragmentRegistry(
 
   const duplicateFragmentNames: string[] = [];
   const registry = documents.reduce<FragmentRegistry>((prev: FragmentRegistry, documentRecord) => {
-    const fragments: FragmentDefinitionNode[] = documentRecord.document.definitions.filter(
+    const fragments: FragmentDefinitionNode[] = documentRecord.document!.definitions.filter(
       d => d.kind === Kind.FRAGMENT_DEFINITION
     ) as FragmentDefinitionNode[];
 
@@ -93,7 +93,7 @@ function buildFragmentRegistry(
         }
 
         const possibleTypes = getPossibleTypes(schemaObject, schemaType);
-        const filePath = generateFilePath(documentRecord.location);
+        const filePath = generateFilePath(documentRecord.location!);
         const imports = getFragmentImports(
           possibleTypes.map(t => t.name),
           fragment.name.value

@@ -7,7 +7,7 @@ import {
   ImportDeclaration,
   LoadedFragment,
 } from '@graphql-codegen/visitor-plugin-common';
-import { FragmentDefinitionNode, GraphQLSchema } from 'graphql';
+import { DefinitionNode, FragmentDefinitionNode, GraphQLSchema } from 'graphql';
 import buildFragmentResolver from './fragment-resolver';
 import { Source } from '@graphql-tools/utils';
 
@@ -51,6 +51,7 @@ export function resolveDocumentImports<T>(
   presetOptions: Types.PresetFnArgs<T>,
   schemaObject: GraphQLSchema,
   importResolverOptions: DocumentImportResolverOptions,
+  operationNameFilter: RegExp,
   dedupeFragments = false
 ): Array<ResolveDocumentImportResult> {
   const resolveFragments = buildFragmentResolver(importResolverOptions, presetOptions, schemaObject, dedupeFragments);
@@ -59,13 +60,13 @@ export function resolveDocumentImports<T>(
 
   return documents.map(documentFile => {
     try {
-      const generatedFilePath = generateFilePath(documentFile.location);
+      const generatedFilePath = generateFilePath(documentFile.location!);
       const importStatements: string[] = [];
-      const { externalFragments, fragmentImports } = resolveFragments(generatedFilePath, documentFile.document);
+      const { externalFragments, fragmentImports } = resolveFragments(generatedFilePath, documentFile.document!);
 
       if (
         isUsingTypes(
-          documentFile.document,
+          documentFile.document!,
           externalFragments.map(m => m.name),
           schemaObject
         )
@@ -80,14 +81,35 @@ export function resolveDocumentImports<T>(
         importStatements.unshift(schemaTypesImportStatement);
       }
 
+      const filteredDefinitions = documentFile.document!.definitions.reduce(
+        (accumulator: Array<DefinitionNode>, definition) => {
+          if (definition.kind !== 'OperationDefinition') {
+            return [...accumulator, definition];
+          }
+
+          const operationName = definition.name?.value || '';
+
+          return operationNameFilter.test(operationName) ? [...accumulator, definition] : accumulator;
+        },
+        []
+      );
+
+      const filteredDocumentFile: Source = {
+        ...documentFile,
+        document: {
+          ...documentFile.document!,
+          definitions: filteredDefinitions,
+        },
+      };
+
       return {
         filename: generatedFilePath,
-        documents: [documentFile],
+        documents: [filteredDocumentFile],
         importStatements,
         fragmentImports,
         externalFragments,
       };
-    } catch (e) {
+    } catch (e: any) {
       throw new DetailedError(
         `Unable to validate GraphQL document!`,
         `
