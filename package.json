@@ -1,5 +1,5 @@
 {
-  "name": "@trayio/near-operation-file-preset",
+  "name": "leemhenson-near-operation-file-preset",
   "version": "1.0.0",
   "description": "GraphQL Code Generator preset for generating operation code near the operation file",
   "license": "ISC",
