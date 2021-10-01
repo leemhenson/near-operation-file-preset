@@ -4,8 +4,9 @@
   "description": "GraphQL Code Generator preset for generating operation code near the operation file",
   "license": "ISC",
   "scripts": {
+    "build": "tsc --project tsconfig.json",
     "lint": "eslint **/*.ts",
-    "prepack": "bob prepack",
+    "prebuild": "rimraf ./dist",
     "prettier": "prettier --ignore-path .gitignore --write --list-different \"**/*.{ts,tsx,graphql,yml}\"",
     "test": "jest --no-watchman --config ./jest.config.js"
   },
@@ -39,27 +40,16 @@
   "peerDependencies": {
     "graphql": "^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0"
   },
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
+  "main": "dist/src/index.js",
+  "module": "dist/src/index.mjs",
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs"
-    },
-    "./*": {
-      "require": "./dist/*.js",
-      "import": "./dist/*.mjs"
+      "require": "./dist/src/index.js",
+      "import": "./dist/src/index.mjs"
     }
   },
-  "typings": "dist/index.d.ts",
+  "typings": "dist/src/index.d.ts",
   "typescript": {
-    "definition": "dist/index.d.ts"
-  },
-  "buildOptions": {
-    "input": "./src/index.ts"
-  },
-  "publishConfig": {
-    "directory": "dist",
-    "access": "public"
+    "definition": "dist/src/index.d.ts"
   }
 }
