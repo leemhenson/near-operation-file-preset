@@ -1,10 +1,9 @@
-const PROJECTS = false;
-const CI = !!process.env.CI;
-
-module.exports =
-  !PROJECTS || CI
-    ? require('./jest.project')({ dirname: __dirname, projectMode: PROJECTS })
-    : {
-        rootDir: __dirname,
-        projects: ['<rootDir>/packages/**/*/jest.config.js'],
-      };
+/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
+module.exports = {
+  collectCoverage: false,
+  preset: 'ts-jest',
+  restoreMocks: true,
+  setupFiles: [`./jest.setup.js`],
+  testEnvironment: 'node',
+  testTimeout: 20000,
+};

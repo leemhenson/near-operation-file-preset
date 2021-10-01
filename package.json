@@ -10,6 +10,8 @@
     "test": "jest --no-watchman --config ./jest.config.js"
   },
   "devDependencies": {
+    "@graphql-codegen/typescript-operations": "^2.1.4",
+    "@graphql-codegen/typescript-react-apollo": "^3.1.4",
     "@types/jest": "27.0.2",
     "@types/node": "14.17.19",
     "@types/parse-filepath": "1.0.0",
@@ -28,9 +30,9 @@
   },
   "dependencies": {
     "@graphql-codegen/add": "^3.1.0",
-    "@graphql-codegen/cli": "2.2.0",
+    "@graphql-codegen/cli": "^2.2.0",
     "@graphql-codegen/plugin-helpers": "^2.1.1",
-    "@graphql-codegen/visitor-plugin-common": "2.2.1",
+    "@graphql-codegen/visitor-plugin-common": "^2.2.1",
     "parse-filepath": "^1.0.2",
     "tslib": "~2.3.0"
   },
